@@ -7,13 +7,13 @@ export const links = {
         text: 'Product',
         link: "/:id",
     },
-    stores: {
-        text: 'All stores',
-        link: "/stores",
+    shops: {
+        text: 'All shops',
+        link: "/shops",
     },
-    store: {
-        text: 'Store',
-        link: "/:id/store",
+    shop: {
+        text: 'Shop',
+        link: "/:id/shop",
     },
     categories: {
         text: 'All categories',

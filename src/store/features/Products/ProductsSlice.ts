@@ -1,19 +1,33 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import {IProductItem, IProducts} from "./Interfaces/IProducts";
+import {product} from "../../../constants/links";
 
 // const productsUrl = 'https://fakestoreapi.com/products';
-const productsUrl = 'https://dummyjson.com/products';
+const shopUrl = 'https://dummyjson.com/products';
 
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async (_, { rejectWithValue }) => {
+export const getStoreProducts = createAsyncThunk('products/fetchProducts', async ({shop}, {rejectWithValue}) => {
     try {
-        const response = await fetch(productsUrl);
+        const response = await fetch(shop);
 
         if (!response.ok) {
             throw new Error('Server Error!');
         }
-
-        const {products} = await response.json();
-        return products;
+        const data = await response.json();
+        const [shopName] = shop.match(/\w+(?=\.com)/);
+        if (data?.products) {
+            const {products} = data;
+            products.map(product => {
+                product.id = `${shopName}/${product.id}`
+                product.image = product.thumbnail
+            })
+            return products
+        } else {
+            const products = data;
+            products.map(product => {
+                product.id = `${shopName}/${product.id}`
+            })
+            return products
+        }
     } catch (error) {
         return rejectWithValue(error.message);
     }
@@ -21,6 +35,7 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (_
 
 
 const initialState: IProducts = {
+    shop: 'https://fakestoreapi.com/products',
     products: [],
     cart: [],
     loading: true,
@@ -31,27 +46,26 @@ export const productsSlice = createSlice({
     name: 'products',
     initialState: initialState,
     reducers: {
-        removeFromCart: (state, { payload }: PayloadAction<IProductItem>) => {
-            const { id } = payload;
-            console.log(id)
+        setShop: (state, {payload}) => {
+            state.shop = payload
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchProducts.pending, (state) => {
+        builder.addCase(getStoreProducts.pending, (state) => {
             state.loading = true;
             state.error = null;
         });
-        builder.addCase(fetchProducts.fulfilled, (state, { payload }: PayloadAction<any>) => {
+        builder.addCase(getStoreProducts.fulfilled, (state, {payload}: PayloadAction<any>) => {
             state.loading = false;
             state.products = payload;
         });
-        builder.addCase(fetchProducts.rejected, (state, { payload }: PayloadAction<any>) => {
+        builder.addCase(getStoreProducts.rejected, (state, {payload}: PayloadAction<any>) => {
             state.loading = false;
             state.error = payload;
         });
     },
 });
 
-// export const { addToCart, removeFromCart } = productsSlice.actions;
+export const {setShop} = productsSlice.actions;
 
 export default productsSlice.reducer;

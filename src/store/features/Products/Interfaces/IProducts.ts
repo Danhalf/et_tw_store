@@ -14,6 +14,7 @@ interface IProductItem extends IProductData {
 }
 
 interface IProducts {
+    shop: string;
     products: IProductData | [];
     cart: IProductItem | any[];
     loading: boolean;
