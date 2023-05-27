@@ -1,4 +1,9 @@
-export const links = {
+interface ILink {
+    text: string,
+    link: string
+}
+
+export const links: Record<string, ILink> = {
     products: {
         text: 'All products',
         link: "/",
@@ -7,22 +12,10 @@ export const links = {
         text: 'Product',
         link: "/:id",
     },
-    shops: {
-        text: 'All shops',
-        link: "/shops",
+    cart: {
+        text: 'Cart',
+        link: '/cart'
     },
-    shop: {
-        text: 'Shop',
-        link: "/:id/shop",
-    },
-    categories: {
-        text: 'All categories',
-        link: "/categories",
-    },
-    category: {
-        text: 'Category',
-        link: "/:id/category",
-    },
-}
+};
 
-export const { products, product, stores, store, categories, category} = links
+export const {products, product, cart} = links
