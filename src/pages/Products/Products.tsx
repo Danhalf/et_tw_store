@@ -1,7 +1,7 @@
 import {FC, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getStoreProducts} from "../../store/features/Products/ProductsSlice";
-import {ProductItem} from "./ProductItem/ProductItem.component";
+import {ProductItem} from "../../components/ProductItem/ProductItem.component";
 
 // export async function http<T>(request: string): Promise<T> {
 //     const response = await fetch(request);
